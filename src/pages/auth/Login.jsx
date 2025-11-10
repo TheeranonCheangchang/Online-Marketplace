@@ -1,0 +1,104 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Mail, Lock, Chrome } from 'lucide-react';
+import Header from '../../components/layout/Header';
+import Footer from '../../components/layout/Footer';
+
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Login:', { email, password });
+    // TODO: เชื่อม API Login
+  };
+
+  const handleGoogleLogin = () => {
+    console.log('Google Login');
+    // TODO: เชื่อม Google OAuth
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Header isLoggedIn={false} />
+
+      <main className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          {/* Card */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+            {/* Title */}
+            <h1 className="text-3xl font-bold text-center mb-8">เข้าสู่ระบบ</h1>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Email */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 placeholder-gray-500"
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 placeholder-gray-500"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full bg-[#FF9B8A] hover:bg-[#FF8A77] text-white font-semibold py-3 rounded-lg transition-colors"
+              >
+                Continue
+              </button>
+            </form>
+
+            {/* Register Link */}
+            <p className="text-center mt-4 text-sm">
+              ยังไม่มีบัญชีใช่ไหม?{' '}
+              <Link to="/register" className="text-red-500 hover:underline font-medium">
+                สร้างบัญชี
+              </Link>
+            </p>
+
+            {/* Divider */}
+            <div className="flex items-center my-6">
+              <hr className="flex-1 border-gray-300" />
+              <span className="px-4 text-gray-500 font-medium">OR</span>
+              <hr className="flex-1 border-gray-300" />
+            </div>
+
+            {/* Google Login */}
+            <button
+              onClick={handleGoogleLogin}
+              className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-3"
+            >
+              <Chrome size={24} className="text-blue-500" />
+              Continue with Google
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
