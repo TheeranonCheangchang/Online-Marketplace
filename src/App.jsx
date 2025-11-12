@@ -7,6 +7,12 @@ import PaymentMethod from './pages/customer/PaymentMethod';
 import ReviewProduct from './pages/customer/ReviewProduct';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ShopDashboard from './pages/shop/ShopDashboard';
+import ShopRegister from './pages/shop/ShopRegister';
+import ShopProducts from './pages/shop/ShopProducts';
+import EditProduct from './pages/shop/EditProduct';
+import AddProduct from './pages/shop/AddProduct';
+
 
 function App() {
   return (
@@ -20,6 +26,12 @@ function App() {
         <Route path="/review/:id" element={<ReviewProduct />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/shop/dashboard" element={<ShopDashboard />} />
+        <Route path="/shop/register" element={<ShopRegister />} />
+        <Route path="/shop/products" element={<ShopProducts />} />
+        <Route path="/shop/products" element={<ShopProducts />} />
+        <Route path="/shop/products/add" element={<AddProduct />} />
+        <Route path="/shop/products/edit/:id" element={<EditProduct />} />
       </Routes>
     </BrowserRouter>
   );
