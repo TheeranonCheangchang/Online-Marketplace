@@ -12,7 +12,20 @@ import ShopRegister from './pages/shop/ShopRegister';
 import ShopProducts from './pages/shop/ShopProducts';
 import EditProduct from './pages/shop/EditProduct';
 import AddProduct from './pages/shop/AddProduct';
-
+import CheckoutPage from './pages/shop/CheckoutPage';
+import OrdersPage from './pages/shop/OrdersPage';
+import PromotionsPage from './pages/shop/PromotionsPage';
+import CreatePromotionPage from './pages/shop/CreatePromotionPage';
+import ShopRentalPayment from './pages/shop/ShopRentalPayment';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminShops from './pages/admin/AdminShops';
+import AdminOrders from './pages/admin/AdminOrders';
+import AdminCategories from './pages/admin/AdminCategories';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminUserEmails from './pages/admin/AdminUserEmails';
+import AdminCoupons from './pages/admin/AdminCoupons';
+import AdminOrdersList from './pages/admin/AdminOrdersList';
+import AdminOrderDetail from './pages/admin/AdminOrderDetail';
 
 function App() {
   return (
@@ -32,6 +45,20 @@ function App() {
         <Route path="/shop/products" element={<ShopProducts />} />
         <Route path="/shop/products/add" element={<AddProduct />} />
         <Route path="/shop/products/edit/:id" element={<EditProduct />} />
+        <Route path="/shop/checkout/:orderId" element={<CheckoutPage />} />
+        <Route path="/shop/orders" element={<OrdersPage />} />
+        <Route path="/shop/promotions" element={<PromotionsPage />} />
+        <Route path="/shop/promotions/create" element={<CreatePromotionPage />} />
+        <Route path="/shop/rental/payment" element={<ShopRentalPayment />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/shops" element={<AdminShops />} />
+        <Route path="/admin/orders" element={<AdminOrders />} />
+        <Route path="/admin/categories" element={<AdminCategories />} />
+        <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/users/emails" element={<AdminUserEmails />} />
+        <Route path="/admin/coupons" element={<AdminCoupons />} />
+        <Route path="/admin/orders" element={<AdminOrdersList />} />
+        <Route path="/admin/orders/:orderId" element={<AdminOrderDetail />} />
       </Routes>
     </BrowserRouter>
   );

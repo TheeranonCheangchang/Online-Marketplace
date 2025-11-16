@@ -1,14 +1,25 @@
 import { useState } from 'react';
-import { ShoppingCart, Search, User, ChevronDown, Menu, X, LogOut, Package, UserCircle } from 'lucide-react';
+import { ShoppingCart, Search, User, ChevronDown, Menu, X, LogOut, Package, UserCircle, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export default function Header({ isLoggedIn = false, cartCount = 0 }) {
+export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = true}) {
+// ============================================
+// EXAMPLE USAGE IN PAGES
+// ============================================
+
+// สำหรับ Admin
+// <Header isLoggedIn={true} cartCount={0} isAdmin={true} />
+
+// สำหรับ User ทั่วไป
+// <Header isLoggedIn={true} cartCount={3} isAdmin={false} />
+
+// สำหรับ Guest
+// <Header isLoggedIn={false} />
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   const handleLogout = () => {
-    // Logout logic here
     console.log('Logout clicked');
     setUserDropdownOpen(false);
   };
@@ -94,6 +105,21 @@ export default function Header({ isLoggedIn = false, cartCount = 0 }) {
                       
                       {/* Menu */}
                       <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                        {/* Admin Menu - แสดงเฉพาะ Admin */}
+                        {isAdmin && (
+                          <>
+                            <Link 
+                              to="/admin/dashboard"
+                              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                              onClick={() => setUserDropdownOpen(false)}
+                            >
+                              <Shield size={20} className="text-blue-600" />
+                              <span className="text-gray-700 font-medium">Admin Panel</span>
+                            </Link>
+                            <hr className="my-2 border-gray-200" />
+                          </>
+                        )}
+
                         <Link 
                           to="/profile"
                           className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
@@ -194,6 +220,21 @@ export default function Header({ isLoggedIn = false, cartCount = 0 }) {
             </div>
           ) : (
             <div className="space-y-1">
+              {/* Admin Menu - Mobile */}
+              {isAdmin && (
+                <>
+                  <Link 
+                    to="/admin/dashboard"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-lg transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Shield size={20} className="text-blue-600" />
+                    <span className="text-gray-700 font-medium">Admin Panel</span>
+                  </Link>
+                  <hr className="my-2 border-gray-200" />
+                </>
+              )}
+
               <Link 
                 to="/profile"
                 className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors"

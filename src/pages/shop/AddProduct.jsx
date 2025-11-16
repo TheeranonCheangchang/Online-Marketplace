@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { LayoutGrid, Package, FileText, Tag, Store, Upload } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Upload } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
+import ShopSidebar from '../../components/layout/ShopSidebar';
 
 export default function AddProduct() {
   const navigate = useNavigate();
@@ -53,34 +54,7 @@ export default function AddProduct() {
       <Header isLoggedIn={true} cartCount={0} />
 
       <div className="flex-1 flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-white border-r min-h-full">
-          <nav className="p-4 space-y-2">
-            <Link to="/shop/dashboard" className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700">
-              <LayoutGrid size={20} />
-              Overview
-            </Link>
-            <Link to="/shop/products" className="flex items-center gap-3 px-4 py-3 bg-[#FF9B8A] text-white rounded-lg font-medium">
-              <Package size={20} />
-              Products
-            </Link>
-            <Link to="/shop/orders" className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700">
-              <FileText size={20} />
-              Orders
-            </Link>
-            <Link to="/shop/promotions" className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700">
-              <Tag size={20} />
-              Promotion
-            </Link>
-          </nav>
-
-          <div className="p-4 mt-auto border-t">
-            <Link to="/shop/register" className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700">
-              <Store size={20} />
-              ข้าระเงินค่าเช่า
-            </Link>
-          </div>
-        </aside>
+        <ShopSidebar />
 
         {/* Main Content */}
         <main className="flex-1 p-6 bg-gray-900">
@@ -89,10 +63,10 @@ export default function AddProduct() {
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold text-white">เพิ่มสินค้า</h1>
               <button
-                onClick={() => navigate('/shop/products')}
+                onClick={handleSubmit}
                 className="px-6 py-2 bg-[#FF9B8A] hover:bg-[#FF8A77] text-white font-medium rounded-lg transition-colors"
               >
-                เพิ่มสินค้า
+                บันทึกสินค้า
               </button>
             </div>
 

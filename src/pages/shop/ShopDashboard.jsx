@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { LayoutGrid, Package, FileText, Tag, Store } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
+import ShopSidebar from '../../components/layout/ShopSidebar';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { FileText, Package } from 'lucide-react';
 
 export default function ShopDashboard() {
   const [timeFilter, setTimeFilter] = useState('monthly');
 
-  // Mock data
   const stats = {
     totalOrders: 12,
     totalSales: 360
@@ -34,49 +33,7 @@ export default function ShopDashboard() {
       <Header isLoggedIn={true} cartCount={0} />
 
       <div className="flex-1 flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-white border-r min-h-full">
-          <nav className="p-4 space-y-2">
-            <Link
-              to="/shop/dashboard"
-              className="flex items-center gap-3 px-4 py-3 bg-[#FF9B8A] text-white rounded-lg font-medium"
-            >
-              <LayoutGrid size={20} />
-              Overview
-            </Link>
-            <Link
-              to="/shop/products"
-              className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-            >
-              <Package size={20} />
-              Products
-            </Link>
-            <Link
-              to="/shop/orders"
-              className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-            >
-              <FileText size={20} />
-              Orders
-            </Link>
-            <Link
-              to="/shop/promotions"
-              className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-            >
-              <Tag size={20} />
-              Promotion
-            </Link>
-          </nav>
-
-          <div className="p-4 mt-auto border-t">
-            <Link
-              to="/shop/register"
-              className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-            >
-              <Store size={20} />
-              ข้าระเงินค่าเช่า
-            </Link>
-          </div>
-        </aside>
+        <ShopSidebar />
 
         {/* Main Content */}
         <main className="flex-1 p-6">

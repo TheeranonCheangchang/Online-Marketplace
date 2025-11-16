@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { LayoutGrid, Package, FileText, Tag, Store, Plus, Edit, Trash2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Plus, Trash2 } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
+import ShopSidebar from '../../components/layout/ShopSidebar';
 
 export default function ShopProducts() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -41,49 +43,7 @@ export default function ShopProducts() {
       <Header isLoggedIn={true} cartCount={0} />
 
       <div className="flex-1 flex">
-        {/* Sidebar */}
-        <aside className="w-64 bg-white border-r min-h-full">
-          <nav className="p-4 space-y-2">
-            <Link
-              to="/shop/dashboard"
-              className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-            >
-              <LayoutGrid size={20} />
-              Overview
-            </Link>
-            <Link
-              to="/shop/products"
-              className="flex items-center gap-3 px-4 py-3 bg-[#FF9B8A] text-white rounded-lg font-medium"
-            >
-              <Package size={20} />
-              Products
-            </Link>
-            <Link
-              to="/shop/orders"
-              className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-            >
-              <FileText size={20} />
-              Orders
-            </Link>
-            <Link
-              to="/shop/promotions"
-              className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-            >
-              <Tag size={20} />
-              Promotion
-            </Link>
-          </nav>
-
-          <div className="p-4 mt-auto border-t">
-            <Link
-              to="/shop/register"
-              className="flex items-center gap-3 px-4 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-            >
-              <Store size={20} />
-              ข้าระเงินค่าเช่า
-            </Link>
-          </div>
-        </aside>
+        <ShopSidebar />
 
         {/* Main Content */}
         <main className="flex-1 p-6">
@@ -121,13 +81,12 @@ export default function ShopProducts() {
                     <p className="text-sm text-gray-600 mb-1">จำนวน {product.stock}</p>
                     
                     <div className="flex gap-2 mt-3">
-// ในส่วน Product Card
-<button
-  onClick={() => navigate(`/shop/products/edit/${product.id}`)}
-  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-sm font-medium transition-colors"
->
-  แก้ไข
-</button>
+                      <button
+                        onClick={() => navigate(`/shop/products/edit/${product.id}`)}
+                        className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-sm font-medium transition-colors"
+                      >
+                        แก้ไข
+                      </button>
                       <button
                         onClick={() => handleDelete(product.id)}
                         className="px-3 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition-colors"
