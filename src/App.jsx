@@ -26,6 +26,9 @@ import AdminUserEmails from './pages/admin/AdminUserEmails';
 import AdminCoupons from './pages/admin/AdminCoupons';
 import AdminOrdersList from './pages/admin/AdminOrdersList';
 import AdminOrderDetail from './pages/admin/AdminOrderDetail';
+import Profile from './pages/customer/Profile';
+import Orders from './pages/customer/Orders';
+import OrderDetail from './pages/customer/OrderDetail';
 
 function App() {
   return (
@@ -59,6 +62,9 @@ function App() {
         <Route path="/admin/coupons" element={<AdminCoupons />} />
         <Route path="/admin/orders" element={<AdminOrdersList />} />
         <Route path="/admin/orders/:orderId" element={<AdminOrderDetail />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/order/:orderId" element={<OrderDetail />} />
       </Routes>
     </BrowserRouter>
   );
