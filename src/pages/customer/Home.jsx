@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ShoppingCart, ChevronLeft, ChevronRight, Menu, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
 
-// Mock Data
+// Mock Data - Products
 const products = [
   {
     id: 1,
     name: 'Shirt Sport',
     price: 350,
+    categoryId: 21, // เสื้อทีเชิร์ตผู้ชาย
     image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
     shop: { name: 'TechShop' }
   },
@@ -17,6 +18,7 @@ const products = [
     id: 2,
     name: 'Galaxy Cat Shirt',
     price: 350,
+    categoryId: 21,
     image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop',
     shop: { name: 'TechShop' }
   },
@@ -24,6 +26,7 @@ const products = [
     id: 3,
     name: 'Shirt',
     price: 350,
+    categoryId: 22, // เสื้อทีเชิร์ตผู้หญิง
     image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&h=400&fit=crop',
     shop: { name: 'Fashion Store' }
   },
@@ -31,36 +34,52 @@ const products = [
     id: 4,
     name: 'Rainbow Dog Shirt',
     price: 350,
+    categoryId: 11, // เสื้อผ้าผู้ชาย
     image: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400&h=400&fit=crop',
     shop: { name: 'Pet Store' }
   },
   {
     id: 5,
-    name: 'Shirt Sport',
-    price: 350,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-    shop: { name: 'Sports Store' }
+    name: 'Dress Shirt',
+    price: 450,
+    categoryId: 31, // เสื้อเชิ้ตเดรส
+    image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=400&fit=crop',
+    shop: { name: 'Fashion Store' }
   },
   {
     id: 6,
-    name: 'Shirt Sport',
-    price: 350,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-    shop: { name: 'Sports Store' }
+    name: 'Women Blouse',
+    price: 380,
+    categoryId: 12, // เสื้อผ้าผู้หญิง
+    image: 'https://images.unsplash.com/photo-1589810876158-ef5a62a3e7e0?w=400&h=400&fit=crop',
+    shop: { name: 'Fashion Store' }
+  }
+];
+
+// Mock Categories - ดึงมาจาก Admin
+const categories = [
+  {
+    id: 1,
+    name: 'เสื้อผ้า',
+    children: [
+      { id: 11, name: 'เสื้อผ้าผู้ชาย' },
+      { id: 12, name: 'เสื้อผ้าผู้หญิง' }
+    ]
   },
   {
-    id: 7,
-    name: 'Shirt Sport',
-    price: 350,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-    shop: { name: 'Sports Store' }
+    id: 2,
+    name: 'เสื้อทีเชิร์ต',
+    children: [
+      { id: 21, name: 'เสื้อทีเชิร์ตผู้ชาย' },
+      { id: 22, name: 'เสื้อทีเชิร์ตผู้หญิง' }
+    ]
   },
   {
-    id: 8,
-    name: 'Shirt Sport',
-    price: 350,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-    shop: { name: 'Sports Store' }
+    id: 3,
+    name: 'เสื้อเชิ้ต',
+    children: [
+      { id: 31, name: 'เสื้อเชิ้ตเดรสและเสื้อเชิ้ต' }
+    ]
   }
 ];
 
@@ -73,15 +92,15 @@ const reviews = [
   },
   {
     id: 2,
-    product: 'Shirt Fuji & Sakura',
+    product: 'Galaxy Cat Shirt',
     rating: 5,
-    comment: 'เสื้อใส่สบายเนื้อผ้าดีมีคุณภาพ'
+    comment: 'ลายสวยมาก ใส่แล้วชอบมากค่ะ'
   },
   {
     id: 3,
-    product: 'Shirt Fuji & Sakura',
-    rating: 5,
-    comment: 'เสื้อใส่สบายเนื้อผ้าดีมีคุณภาพ'
+    product: 'Rainbow Dog Shirt',
+    rating: 4,
+    comment: 'สีสันสดใส คุณภาพดี แนะนำเลย'
   }
 ];
 
@@ -103,7 +122,7 @@ function ProductCard({ product, onAddToCart }) {
             {product.name}
           </h3>
         </Link>
-        <p className="text-lg font-bold mb-3">{product.price}</p>
+        <p className="text-lg font-bold text-[#FF9B8A] mb-3">฿{product.price}</p>
         <button 
           onClick={() => onAddToCart(product)}
           className="w-full bg-[#FF9B8A] hover:bg-[#FF8A77] text-white py-2 rounded-full transition-colors flex items-center justify-center gap-2 text-sm font-medium"
@@ -134,25 +153,17 @@ function ReviewCard({ review }) {
   );
 }
 
-function CategoryFilter({ isOpen, onClose, onSelectCategory }) {
-  const [selectedCategories, setSelectedCategories] = useState([]);
-
-  const categories = [
-    { id: 'electronics', name: 'เสื้อผ้า' },
-    { id: 'fashion', name: 'เสื้อทีเชิร์ต' },
-    { id: 'home', name: 'เสื้อผู้ชายและเสื้อเชิ้ต' },
-    { id: 'beauty', name: 'เสื้อเชิ้ตเดรสและเสื้อทีเชิร์ต' }
-  ];
-
+function CategoryFilter({ isOpen, onClose, onSelectCategory, selectedCategories }) {
   const handleToggleCategory = (categoryId) => {
     const newSelected = selectedCategories.includes(categoryId)
       ? selectedCategories.filter(id => id !== categoryId)
       : [...selectedCategories, categoryId];
     
-    setSelectedCategories(newSelected);
-    if (onSelectCategory) {
-      onSelectCategory(newSelected);
-    }
+    onSelectCategory(newSelected);
+  };
+
+  const handleClearAll = () => {
+    onSelectCategory([]);
   };
 
   if (!isOpen) return null;
@@ -164,34 +175,65 @@ function CategoryFilter({ isOpen, onClose, onSelectCategory }) {
         onClick={onClose}
       ></div>
 
-      <div className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl z-50 overflow-y-auto animate-slide-in">
-        <div className="p-4">
+      <div className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 overflow-y-auto animate-slide-in">
+        <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold">หมวดหมู่สินค้า</h3>
+            <h3 className="text-xl font-bold">กรองสินค้า</h3>
             <button 
               onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded-full text-2xl"
+              className="p-2 hover:bg-gray-100 rounded-full text-2xl"
             >
               ×
             </button>
           </div>
 
-          <div className="space-y-3">
-            {categories.map((category) => (
-              <label 
-                key={category.id}
-                className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded"
+          {/* Selected Count */}
+          {selectedCategories.length > 0 && (
+            <div className="mb-4 flex items-center justify-between bg-blue-50 p-3 rounded-lg">
+              <span className="text-sm text-blue-800">
+                เลือกแล้ว {selectedCategories.length} หมวดหมู่
+              </span>
+              <button
+                onClick={handleClearAll}
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
               >
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(category.id)}
-                  onChange={() => handleToggleCategory(category.id)}
-                  className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                />
-                <span className="text-gray-700">{category.name}</span>
-              </label>
+                ล้างทั้งหมด
+              </button>
+            </div>
+          )}
+
+          {/* Categories */}
+          <div className="space-y-6">
+            {categories.map((category) => (
+              <div key={category.id}>
+                <h4 className="font-bold text-gray-800 mb-3">{category.name}</h4>
+                <div className="space-y-2 ml-2">
+                  {category.children.map((child) => (
+                    <label 
+                      key={child.id}
+                      className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(child.id)}
+                        onChange={() => handleToggleCategory(child.id)}
+                        className="w-5 h-5 text-[#FF9B8A] rounded focus:ring-2 focus:ring-[#FF9B8A] cursor-pointer"
+                      />
+                      <span className="text-gray-700">{child.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
+
+          {/* Apply Button */}
+          <button
+            onClick={onClose}
+            className="w-full mt-6 bg-[#FF9B8A] hover:bg-[#FF8A77] text-white py-3 rounded-lg font-medium transition-colors"
+          >
+            ปิด
+          </button>
         </div>
       </div>
     </>
@@ -202,7 +244,20 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [cartCount, setCartCount] = useState(3);
+  const [cartCount, setCartCount] = useState(0);
+  const [filteredProducts, setFilteredProducts] = useState(products);
+
+  // Filter products based on selected categories
+  useEffect(() => {
+    if (selectedCategories.length === 0) {
+      setFilteredProducts(products);
+    } else {
+      const filtered = products.filter(product => 
+        selectedCategories.includes(product.categoryId)
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [selectedCategories]);
 
   const handleAddToCart = (product) => {
     setCartCount(cartCount + 1);
@@ -211,89 +266,109 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
       <Header isLoggedIn={true} cartCount={cartCount} />
 
-      {/* Category Filter */}
       <CategoryFilter 
         isOpen={filterOpen}
         onClose={() => setFilterOpen(false)}
         onSelectCategory={setSelectedCategories}
+        selectedCategories={selectedCategories}
       />
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-6 md:py-8 flex-1">
-        {/* Filter Button */}
+        {/* Filter Button & Active Filters */}
         <div className="mb-6">
-          <button 
-            onClick={() => setFilterOpen(true)}
-            className="flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 border-2 border-gray-300 rounded-full hover:bg-gray-50 transition-colors text-sm font-medium"
-          >
-            <Menu size={18} />
-            ตัวกรองและการเรียงลำดับ
-          </button>
-        </div>
-
-        {/* Product Grid - Responsive */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-          {products.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              product={product}
-              onAddToCart={handleAddToCart}
-            />
-          ))}
-        </div>
-
-        {/* Pagination - Responsive */}
-        <div className="flex items-center justify-center gap-1 md:gap-2 mb-12">
-          <button className="p-1.5 md:p-2 rounded-full border-2 border-gray-300 hover:bg-gray-50 transition-colors">
-            <ChevronLeft size={20} className="text-gray-600" />
-          </button>
-          {[1, 2, 3, 4, 5].map((page) => (
-            <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={`w-8 h-8 md:w-10 md:h-10 rounded-full font-medium transition-colors text-sm md:text-base ${
-                currentPage === page
-                  ? 'bg-[#FFD4E5] text-[#FF6B9D]'
-                  : 'hover:bg-gray-100 text-gray-700'
-              }`}
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setFilterOpen(true)}
+              className="flex items-center gap-2 px-5 py-2.5 border-2 border-gray-900 rounded-full hover:bg-gray-50 transition-colors text-sm font-medium"
             >
-              {page}
+              <Menu size={18} />
+              หมวดหมู่สินค้า
+              {selectedCategories.length > 0 && (
+                <span className="bg-[#FF9B8A] text-white px-2 py-0.5 rounded-full text-xs">
+                  {selectedCategories.length}
+                </span>
+              )}
             </button>
-          ))}
-          <span className="text-gray-500 px-1">...</span>
-          <button className="p-1.5 md:p-2 rounded-full border-2 border-gray-300 hover:bg-gray-50 transition-colors">
-            <ChevronRight size={20} className="text-gray-600" />
-          </button>
+
+            {selectedCategories.length > 0 && (
+              <span className="text-sm text-gray-600">
+                แสดง {filteredProducts.length} สินค้า
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* Reviews Section - Responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {reviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
-          ))}
+        {/* Product Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <ProductCard 
+                key={product.id} 
+                product={product}
+                onAddToCart={handleAddToCart}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500 text-lg mb-4">ไม่พบสินค้าในหมวดหมู่ที่เลือก</p>
+              <button
+                onClick={() => setSelectedCategories([])}
+                className="text-blue-600 hover:underline"
+              >
+                ดูสินค้าทั้งหมด
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Pagination */}
+        {filteredProducts.length > 0 && (
+          <div className="flex items-center justify-center gap-2 mb-12">
+            <button className="p-2 rounded-full border-2 border-gray-300 hover:bg-gray-50 transition-colors">
+              <ChevronLeft size={20} />
+            </button>
+            {[1, 2, 3].map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`w-10 h-10 rounded-full font-medium transition-colors ${
+                  currentPage === page
+                    ? 'bg-[#FF9B8A] text-white'
+                    : 'hover:bg-gray-100 text-gray-700'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+            <button className="p-2 rounded-full border-2 border-gray-300 hover:bg-gray-50 transition-colors">
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        )}
+
+        {/* Reviews Section */}
+        <div>
+          <h2 className="text-2xl font-bold mb-6">รีวิวจากลูกค้า</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {reviews.map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+          </div>
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
 
       <style>{`
         @keyframes slide-in {
-          from {
-            transform: translateX(-100%);
-          }
-          to {
-            transform: translateX(0);
-          }
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
         }
-        
         .animate-slide-in {
           animation: slide-in 0.3s ease-out;
         }
-
         .line-clamp-1 {
           display: -webkit-box;
           -webkit-line-clamp: 1;
