@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ShoppingCart, Search, User, ChevronDown, Menu, X, LogOut, Package, UserCircle, Shield } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = true}) {
+export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = false }) {
 // ============================================
 // EXAMPLE USAGE IN PAGES
 // ============================================
@@ -15,13 +15,27 @@ export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = tr
 
 // สำหรับ Guest
 // <Header isLoggedIn={false} />
+
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
+  // Redirect Admin ไปหน้า Dashboard เมื่อ Login
+  const handleLogoClick = () => {
+    if (isLoggedIn && isAdmin) {
+      navigate('/admin/dashboard');
+    } else {
+      navigate('/');
+    }
+  };
+
   const handleLogout = () => {
     console.log('Logout clicked');
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('userEmail');
     setUserDropdownOpen(false);
+    navigate('/');
   };
 
   return (
@@ -29,29 +43,34 @@ export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = tr
       <div className="container mx-auto px-4 py-3 md:py-4">
         <div className="flex items-center justify-between gap-2 md:gap-8">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+          <button 
+            onClick={handleLogoClick}
+            className="flex items-center gap-2 flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
+          >
             <ShoppingCart className="text-red-500" size={32} />
             <div className="hidden sm:block">
               <div className="text-red-500 font-bold text-sm">Online</div>
               <div className="text-red-500 font-bold text-lg leading-none">Marketplace</div>
             </div>
-          </Link>
+          </button>
 
-          {/* Search Bar - Hidden on Mobile */}
-          <div className="hidden md:flex flex-1 max-w-xl">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder=""
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-4 pr-16 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:border-gray-900"
-              />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700">
-                <Search size={24} />
-              </button>
+          {/* Search Bar - Hidden on Mobile & Admin */}
+          {!isAdmin && (
+            <div className="hidden md:flex flex-1 max-w-xl">
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  placeholder="ค้นหาสินค้า..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-4 pr-16 py-3 border-2 border-gray-900 rounded-full focus:outline-none focus:border-gray-900"
+                />
+                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700">
+                  <Search size={24} />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Right Section - Desktop */}
           <div className="hidden md:flex items-center gap-4 flex-shrink-0">
@@ -72,15 +91,17 @@ export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = tr
               </>
             ) : (
               <>
-                {/* Cart */}
-                <Link to="/cart" className="relative">
-                  <ShoppingCart size={32} className="text-gray-700 hover:text-red-500 transition-colors" />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
+                {/* Cart - Hidden for Admin */}
+                {!isAdmin && (
+                  <Link to="/cart" className="relative">
+                    <ShoppingCart size={32} className="text-gray-700 hover:text-red-500 transition-colors" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
+                )}
                 
                 {/* User Dropdown */}
                 <div className="relative">
@@ -105,40 +126,54 @@ export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = tr
                       
                       {/* Menu */}
                       <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                        {/* Admin Menu - แสดงเฉพาะ Admin */}
+                        {/* Admin Badge */}
                         {isAdmin && (
                           <>
+                            <div className="px-4 py-3 bg-blue-50 border-b border-blue-200">
+                              <div className="flex items-center gap-2">
+                                <Shield size={20} className="text-blue-600" />
+                                <div>
+                                  <p className="text-xs text-gray-600">ผู้ดูแลระบบ</p>
+                                  <p className="text-sm font-bold text-blue-600">ADMIN</p>
+                                </div>
+                              </div>
+                            </div>
+                            <hr className="my-2 border-gray-200" />
+                            
                             <Link 
                               to="/admin/dashboard"
-                              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                              className="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 transition-colors font-medium"
                               onClick={() => setUserDropdownOpen(false)}
                             >
                               <Shield size={20} className="text-blue-600" />
-                              <span className="text-gray-700 font-medium">Admin Panel</span>
+                              <span className="text-gray-700">Admin Dashboard</span>
                             </Link>
                             <hr className="my-2 border-gray-200" />
                           </>
                         )}
 
-                        <Link 
-                          to="/profile"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
-                          onClick={() => setUserDropdownOpen(false)}
-                        >
-                          <UserCircle size={20} className="text-gray-600" />
-                          <span className="text-gray-700">โปรไฟล์</span>
-                        </Link>
-                        
-                        <Link 
-                          to="/orders"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
-                          onClick={() => setUserDropdownOpen(false)}
-                        >
-                          <Package size={20} className="text-gray-600" />
-                          <span className="text-gray-700">ประวัติการสั่งซื้อ</span>
-                        </Link>
-                        
-                        <hr className="my-2 border-gray-200" />
+                        {!isAdmin && (
+                          <>
+                            <Link 
+                              to="/profile"
+                              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                              onClick={() => setUserDropdownOpen(false)}
+                            >
+                              <UserCircle size={20} className="text-gray-600" />
+                              <span className="text-gray-700">โปรไฟล์</span>
+                            </Link>
+                            
+                            <Link 
+                              to="/orders"
+                              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                              onClick={() => setUserDropdownOpen(false)}
+                            >
+                              <Package size={20} className="text-gray-600" />
+                              <span className="text-gray-700">ประวัติการสั่งซื้อ</span>
+                            </Link>
+                            <hr className="my-2 border-gray-200" />
+                          </>
+                        )}
                         
                         <button 
                           onClick={handleLogout}
@@ -157,11 +192,13 @@ export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = tr
 
           {/* Mobile - Right Section */}
           <div className="flex md:hidden items-center gap-3">
-            <button className="p-2">
-              <Search size={24} className="text-gray-700" />
-            </button>
+            {!isAdmin && (
+              <button className="p-2">
+                <Search size={24} className="text-gray-700" />
+              </button>
+            )}
 
-            {isLoggedIn && (
+            {isLoggedIn && !isAdmin && (
               <Link to="/cart" className="relative">
                 <ShoppingCart size={28} className="text-gray-700" />
                 {cartCount > 0 && (
@@ -181,21 +218,23 @@ export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = tr
           </div>
         </div>
 
-        {/* Mobile Search Bar */}
-        <div className="md:hidden mt-3">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="ค้นหาสินค้า..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-12 py-2.5 border-2 border-gray-900 rounded-full focus:outline-none focus:border-gray-900 text-sm"
-            />
-            <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700">
-              <Search size={20} />
-            </button>
+        {/* Mobile Search Bar - Hidden for Admin */}
+        {!isAdmin && (
+          <div className="md:hidden mt-3">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="ค้นหาสินค้า..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-4 pr-12 py-2.5 border-2 border-gray-900 rounded-full focus:outline-none focus:border-gray-900 text-sm"
+              />
+              <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700">
+                <Search size={20} />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Mobile Menu Dropdown */}
@@ -220,38 +259,53 @@ export default function Header({ isLoggedIn = false, cartCount = 0, isAdmin = tr
             </div>
           ) : (
             <div className="space-y-1">
-              {/* Admin Menu - Mobile */}
+              {/* Admin Section */}
               {isAdmin && (
                 <>
+                  <div className="px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg mb-3">
+                    <div className="flex items-center gap-2">
+                      <Shield size={20} className="text-blue-600" />
+                      <div>
+                        <p className="text-xs text-gray-600">ผู้ดูแลระบบ</p>
+                        <p className="text-sm font-bold text-blue-600">ADMIN</p>
+                      </div>
+                    </div>
+                  </div>
                   <Link 
                     to="/admin/dashboard"
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-lg transition-colors font-medium mb-3"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Shield size={20} className="text-blue-600" />
-                    <span className="text-gray-700 font-medium">Admin Panel</span>
+                    <span className="text-gray-700">Admin Dashboard</span>
                   </Link>
                   <hr className="my-2 border-gray-200" />
                 </>
               )}
 
-              <Link 
-                to="/profile"
-                className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <UserCircle size={20} className="text-gray-600" />
-                <span className="text-gray-700">โปรไฟล์</span>
-              </Link>
-              <Link 
-                to="/orders"
-                className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Package size={20} className="text-gray-600" />
-                <span className="text-gray-700">ประวัติการสั่งซื้อ</span>
-              </Link>
-              <hr className="my-2 border-gray-200" />
+              {/* User Menu */}
+              {!isAdmin && (
+                <>
+                  <Link 
+                    to="/profile"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <UserCircle size={20} className="text-gray-600" />
+                    <span className="text-gray-700">โปรไฟล์</span>
+                  </Link>
+                  <Link 
+                    to="/orders"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Package size={20} className="text-gray-600" />
+                    <span className="text-gray-700">ประวัติการสั่งซื้อ</span>
+                  </Link>
+                  <hr className="my-2 border-gray-200" />
+                </>
+              )}
+              
               <button 
                 className="flex items-center gap-3 px-4 py-3 hover:bg-red-50 rounded-lg transition-colors w-full text-left"
                 onClick={() => {
