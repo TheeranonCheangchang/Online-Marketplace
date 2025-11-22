@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, Store, FileText, Tag, FolderTree } from 'lucide-react';
+import { LayoutGrid, Store, FileText, Tag, FolderTree, Package, Users } from 'lucide-react';
 
 export default function AdminSidebar() {
   const location = useLocation();
@@ -13,9 +13,11 @@ export default function AdminSidebar() {
   const menuItems = [
     { path: '/admin/dashboard', icon: LayoutGrid, label: 'Overview' },
     { path: '/admin/shops', icon: Store, label: 'Shop & Seller' },
+    { path: '/admin/products', icon: Package, label: 'Products' },
     { path: '/admin/orders', icon: FileText, label: 'Orders' },
     { path: '/admin/coupons', icon: Tag, label: 'Coupon' },
-    { path: '/admin/categories', icon: FolderTree, label: 'Category' }
+    { path: '/admin/categories', icon: FolderTree, label: 'Category' },
+    { path: '/admin/users', icon: Users, label: 'Members' }
   ];
 
   return (

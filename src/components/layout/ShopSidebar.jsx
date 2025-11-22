@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, Package, FileText, Tag, Store } from 'lucide-react';
+import { LayoutGrid, Package, FileText, Tag, Store, MessageCircle } from 'lucide-react';
 
 export default function ShopSidebar() {
   const location = useLocation();
@@ -14,7 +14,8 @@ export default function ShopSidebar() {
     { path: '/shop/dashboard', icon: LayoutGrid, label: 'Overview' },
     { path: '/shop/products', icon: Package, label: 'Products' },
     { path: '/shop/orders', icon: FileText, label: 'Orders' },
-    { path: '/shop/promotions', icon: Tag, label: 'Promotion' }
+    { path: '/shop/promotions', icon: Tag, label: 'Promotion' },
+    { path: '/shop/reviews', icon: MessageCircle, label: 'Reviews' }
   ];
 
   return (

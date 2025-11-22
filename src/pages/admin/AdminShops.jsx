@@ -25,7 +25,7 @@ export default function AdminShops() {
       email: 'baanmeledkafae@gmail.com',
       lineId: '@baanmeledkafae',
       address: 'ถนน พหลโยธิน ตำบล/แขวง สามเสนใน อำเภอ/เขต พญาไท จังหวัด กรุงเทพมหานคร รหัสไปรษณีย์ 10400',
-      status: 'รอง่านคล้า',
+      status: 'อนุมัติแล้ว',
       totalSell: 360
     }
   ]);
@@ -85,25 +85,19 @@ export default function AdminShops() {
                       {/* Search Input */}
                       <input
                         type="text"
-                        placeholder="สำหนดคำค้า"
+                        placeholder="กำหนดค่าเช่า"
                         className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF9B8A]"
                       />
 
                       {/* Action Buttons */}
                       <div className="flex gap-2 w-full">
-                        <button
-                          onClick={() => handleViewDetail(shop.id)}
-                          className="flex-1 flex items-center justify-center gap-2 bg-[#FF9B8A] hover:bg-[#FF8A77] text-white py-2 px-4 rounded-lg transition-colors"
-                        >
-                          <Eye size={18} />
-                          ดูเพิ่ม
-                        </button>
+                        
                         <button
                           onClick={() => handleBlock(shop.id)}
                           className="flex-1 flex items-center justify-center gap-2 bg-[#FF9B8A] hover:bg-[#FF8A77] text-white py-2 px-4 rounded-lg transition-colors"
                         >
                           <Lock size={18} />
-                          ปิดบล็อก
+                          ระงับร้านค้า
                         </button>
                       </div>
                     </div>

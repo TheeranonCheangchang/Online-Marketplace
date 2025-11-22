@@ -29,6 +29,9 @@ import AdminOrderDetail from './pages/admin/AdminOrderDetail';
 import Profile from './pages/customer/Profile';
 import Orders from './pages/customer/Orders';
 import OrderDetail from './pages/customer/OrderDetail';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminMembers from './pages/admin/AdminMembers';
+import ManageReviewsPage from './pages/shop/ManageReviewsPage';
 
 function App() {
   return (
@@ -65,6 +68,9 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/order/:orderId" element={<OrderDetail />} />
+        <Route path="/admin/products" element={<AdminProducts />} />
+        <Route path="/admin/users" element={<AdminMembers />} />
+        <Route path="/shop/reviews" element={<ManageReviewsPage />} />
       </Routes>
     </BrowserRouter>
   );

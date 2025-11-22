@@ -46,14 +46,7 @@ export default function AdminUsers() {
                       <select className="px-4 py-2 bg-gray-600 text-white rounded-lg border border-gray-500">
                         <option value="CUSTOMER">CUSTOMER</option>
                         <option value="SELLER">SELLER</option>
-                        <option value="ADMIN">ADMIN</option>
                       </select>
-                      <button
-                        onClick={() => handleViewDetail(user.id)}
-                        className="bg-[#FF9B8A] hover:bg-[#FF8A77] text-white px-6 py-2 rounded-lg transition-colors"
-                      >
-                        ย้อนกลับ
-                      </button>
                     </div>
                   </div>
                 </div>
